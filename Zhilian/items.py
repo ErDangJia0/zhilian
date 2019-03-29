@@ -15,6 +15,8 @@ class ZhilianItem(scrapy.Item):
     jobName = scrapy.Field()  # 职位名称
     salary = scrapy.Field()  # 薪资
     city = scrapy.Field()  # 工作地点
+    area = scrapy.Field()  # 公司所在区域
     workingExp = scrapy.Field()  # 工作经验
     eduLevel = scrapy.Field()  # 学历要求
     recruieCount = scrapy.Field()  # 招聘人数
+    welfare = scrapy.Field()  # 福利

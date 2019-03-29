@@ -28,16 +28,33 @@ class ZhilianSprder(scrapy.Spider):
 
     def getHtml(self, response):
         item = ZhilianItem()
-        item['companyName']=response.xpath("//div[@id='root']/div[@class='a-center-layout__content']//div[@class='company']/a[@class='company__title']/text()").extract()
-        item['jobName']=response.xpath("//div[@id='root']/div[@class='job-summary']//h3/text()").extract()
-        item['salary']=response.xpath("//div[@id='root']/div[@class='job-summary']//span[@class='summary-plane__salary']/text()").extract()
-        item['city']=response.xpath("//div[@id='root']/div[@class='job-summary']//ul[@class='summary-plane__info']/li/a/text()").extract()
-        item['workingExp']=response.xpath("//div[@id='root']/div[@class='job-summary']//ul[@class='summary-plane__info']/li/text()")[0].extract()
+        item['companyName'] = response.xpath(
+            "//div[@id='root']/div[@class='a-center-layout__content']//div[@class='company']/a[@class='company__title']/text()").extract()[0]
+        item['jobName'] = response.xpath("//div[@id='root']/div[@class='job-summary']//h3/text()").extract()[0]
+        item['salary'] = response.xpath(
+            "//div[@id='root']/div[@class='job-summary']//span[@class='summary-plane__salary']/text()").extract()[0]
+        item['city'] = response.xpath(
+            "//div[@id='root']/div[@class='job-summary']//ul[@class='summary-plane__info']/li/a/text()").extract()[0]
+        item['area'] = response.xpath(
+            "//div[@id='root']/div[@class='job-summary']//ul[@class='summary-plane__info']/li/span/text()")
+        if item['area']:
+            item['area']=item['area'].extract()[0]
+        else:
+            item['area']='未知'
+        item['workingExp'] = \
+            response.xpath("//div[@id='root']/div[@class='job-summary']//ul[@class='summary-plane__info']/li/text()")[
+                0].extract()
         item['eduLevel'] = \
-        response.xpath("//div[@id='root']/div[@class='job-summary']//ul[@class='summary-plane__info']/li/text()")[
-            1].extract()
+            response.xpath("//div[@id='root']/div[@class='job-summary']//ul[@class='summary-plane__info']/li/text()")[
+                1].extract()
         item['recruieCount'] = \
-        response.xpath("//div[@id='root']/div[@class='job-summary']//ul[@class='summary-plane__info']/li/text()")[
-            2].extract()
+            response.xpath("//div[@id='root']/div[@class='job-summary']//ul[@class='summary-plane__info']/li/text()")[
+                2].extract()
+        welfares = response.xpath(
+            "//div[@id='root']/div[@class='a-center-layout__content']//div[@class='highlights__content']/span/text()")
+        str = ''
+        for wel in welfares:
+            str += wel.extract() + ','
+        str = str[:-1]
+        item['welfare'] = str
         yield item
-
